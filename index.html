@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CzenConnect Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #chat-container {
+      width: 400px;
+      margin: 50px auto;
+      border: 1px solid #ccc;
+      padding: 20px;
+      overflow-y: scroll;
+      max-height: 300px;
+    }
+
+    #user-input {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <div id="chat">
+      <div id="welcome-message">Welcome to CzenConnect! How can I help you today?</div>
+    </div>
+  </div>
+  <div id="user-input">
+    <input type="text" id="input-message" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    function sendMessage() {
+      var userInput = document.getElementById('input-message').value;
+      if (userInput.trim() === '') return;
+
+      appendMessage('user', userInput);
+      // You can add logic here to fetch and display the response from your backend or database
+      // For simplicity, let's assume a static response for now.
+      var response = "I'm sorry, I don't have the answer right now.";
+
+      appendMessage('bot', response);
+      document.getElementById('input-message').value = '';
+    }
+
+    function appendMessage(sender, message) {
+      var chatContainer = document.getElementById('chat');
+      var newMessage = document.createElement('div');
+      newMessage.className = sender;
+      newMessage.textContent = message;
+      chatContainer.appendChild(newMessage);
+
+      // Scroll to the bottom of the chat container
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+  </script>
+</body>
+</html>
