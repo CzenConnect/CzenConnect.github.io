@@ -45,14 +45,14 @@
     </style>
 </head>
 <body>
-    <form id="loginForm" onsubmit="redirectToConnectPage(); return false;">
+    <form id="loginForm" onsubmit="return redirectToConnectPage()">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
-        <label for="security-question">Security Question: What is the capital of France?</label>
+        <label for="security-question">Security Question: Who is Mahavira?</label>
         <input type="text" id="security-question" name="security-question" required>
 
         <label for="keywords">Keywords: (Separate keywords with commas)</label>
@@ -61,11 +61,19 @@
         <label for="math-challenge">Math Challenge: Solve 5 + 7 = ?</label>
         <input type="number" id="math-challenge" name="math-challenge" required>
 
-        <button type="submit" id="loginButton"><a href="conect.html">Login to CzenGPT</a></button>
+        <label>
+            <input type="checkbox" id="not-a-robot" required>
+            I'm not a robot
+        </label>
+
+        <button type="submit" id="loginButton" disabled>Login to CzenGPT</button>
     </form>
 
     <script>
-        // Enable the button only if all required fields are filled
+        // Define the correct answer to the security question
+        const correctSecurityAnswer = "God";
+
+        // Enable the button only if all required fields are filled, and security answer is correct, and the checkbox is checked
         const loginButton = document.getElementById('loginButton');
         const requiredInputs = document.querySelectorAll('input[required]');
 
@@ -75,15 +83,19 @@
 
         function checkFormValidity() {
             const isFormValid = Array.from(requiredInputs).every(input => input.value.trim() !== '');
-            loginButton.disabled = !isFormValid;
+            const isSecurityAnswerCorrect = document.getElementById('security-question').value.trim().toLowerCase() === correctSecurityAnswer.toLowerCase();
+            const isCheckboxChecked = document.getElementById('not-a-robot').checked;
+            
+            loginButton.disabled = !(isFormValid && isSecurityAnswerCorrect && isCheckboxChecked);
 
             // Adjust opacity based on form validity
-            loginButton.style.opacity = isFormValid ? 1 : 0.5;
+            loginButton.style.opacity = (isFormValid && isSecurityAnswerCorrect && isCheckboxChecked) ? 1 : 0.5;
         }
 
         function redirectToConnectPage() {
             // You can perform additional validation here before redirecting
             window.location.href = "conect.html";
+            return false; // Prevents the form from submitting
         }
     </script>
 </body>
