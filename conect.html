@@ -44,7 +44,6 @@
 
   <script>
     const predefinedQuestions = [
-      // ... questions about famous events
       { question: "What is the capital of Brazil?", answer: "Brasília" },
       { question: "Which country is known as the 'Land of the Rising Sun'?", answer: "Japan" },
       { question: "What is the population of China?", answer: "Over 1.4 billion" },
@@ -55,7 +54,6 @@
       { question: "Which city is known as the 'Big Apple'?", answer: "New York City" },
       { question: "What is the currency of South Africa?", answer: "South African Rand" },
       { question: "In which country is the Acropolis located?", answer: "Greece" },
-      // ... more questions about cities and countries
       { question: "Which city is famous for its cherry blossoms and the Imperial Palace?", answer: "Tokyo" },
       { question: "What is the official language of China?", answer: "Mandarin" },
       { question: "In which country is the Iguazu Falls located?", answer: "Argentina and Brazil" },
@@ -85,7 +83,6 @@
       { question: "In which country is the Matterhorn mountain located?", answer: "Switzerland" },
       { question: "Which city is known as the 'City of a Hundred Spires'?", answer: "Prague" },
       { question: "What is the largest country in the world by land area?", answer: "Russia" },
-      // ... more questions
       { question: "Seoul", answer: "capital of South Korea" },
       { question: "Paris", answer: "capital of France" },
       { question: "Rio", answer: "city in Brazil known for Carnival" },
@@ -128,8 +125,8 @@
       { question: "Antarctica", answer: "southernmost continent on Earth" },
       { question: "Eagle", answer: "bird of prey known for its keen eyesight" },
       { question: "Hello", answer: "hi" },
-      { question: "Bye", answer: "meet you next day" },
-      { question: "Hi", answer: "hello" },
+      { question: "Bye", answer: "bye" },
+      { question: "Namaste", answer: "namaste" },
       // ... more one-word questions and answers
     ];
 
@@ -139,7 +136,17 @@
     }
 
     function simulateUnderstanding(userInput) {
-      // Simulate understanding with a basic if-else condition
+      const mathExpressionRegex = /^(\d+(\.\d+)?([+\-*/]\d+(\.\d+)?)+)$/;
+
+      if (mathExpressionRegex.test(userInput)) {
+        try {
+          const result = eval(userInput);
+          return `CzenGPT: ${userInput} = ${result}`;
+        } catch (error) {
+          return "CzenGPT: Oops! There was an error evaluating the expression.";
+        }
+      }
+
       const foundQuestion = predefinedQuestions.find(question => question.question.toLowerCase() === userInput.toLowerCase());
       if (foundQuestion) {
         return `CzenGPT: ${foundQuestion.answer}`;
