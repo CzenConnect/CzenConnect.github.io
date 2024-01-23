@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czen Multilingual Personal Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            width: 400px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: scroll;
+            max-height: 300px;
+        }
+        #input-container {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="user-input" placeholder="Type your command...">
+        <button onclick="sendCommand()">Send</button>
+        <select id="language-selector">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+        </select>
+    </div>
+
+    <script>
+        var commands = [
+            { keyword: ['time', 'समय'], action: getTime },
+            { keyword: ['date', 'तारीख'], action: getDate },
+            { keyword: ['weather', 'मौसम'], action: getWeather },
+            { keyword: ['news', 'समाचार'], action: getNews },
+            { keyword: ['bollywood', 'बॉलीवुड'], action: getBollywoodNews },
+            { keyword: ['cricket', 'क्रिकेट'], action: getCricketScore },
+            { keyword: ['add', 'जोड़ो'], action: addNumbers },
+            { keyword: ['subtract', 'घटाओ'], action: subtractNumbers },
+            { keyword: ['multiply', 'गुणा'], action: multiplyNumbers },
+            { keyword: ['divide', 'भाग'], action: divideNumbers },
+            // Add more commands as needed
+            // ...
+        ];
+
+        function sendCommand() {
+            var userCommand = document.getElementById('user-input').value.toLowerCase();
+            var selectedLanguage = document.getElementById('language-selector').value;
+
+            // Translate user input to English using Google Translate API (sample)
+            var translatedCommand = translateToEnglish(userCommand, selectedLanguage);
+
+            displayMessage('User', userCommand);
+
+            for (var i = 0; i < commands.length; i++) {
+                var keywords = commands[i].keyword;
+                if (keywords.includes(translatedCommand)) {
+                    var response = commands[i].action();
+                    // Translate the response back to the selected language before displaying
+                    var translatedResponse = translateToLanguage(response, selectedLanguage);
+                    displayMessage('Czen', translatedResponse);
+                    return;
+                }
+            }
+
+            // If no matching command is found
+            displayMessage('Czen', "I'm not sure how to handle that command.");
+        }
+
+        function displayMessage(sender, message) {
+            var chatContainer = document.getElementById('chat-container');
+            var messageDiv = document.createElement('div');
+            messageDiv.innerHTML = '<strong>' + sender + ':</strong> ' + message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function getTime() {
+            var now = new Date();
+            return 'The current time is ' + now.toLocaleTimeString();
+        }
+
+        function getDate() {
+            var now = new Date();
+            return 'Today is ' + now.toDateString();
+        }
+
+        function getWeather() {
+            // Implement weather API integration or provide a sample response
+            return 'The weather is sunny.';
+        }
+
+        function getNews() {
+            // Implement news API integration or provide a sample response
+            return 'Here are the latest news headlines. Modi inaugurates Hindu temple on site of razed mosque in India.';
+        }
+
+        function getBollywoodNews() {
+            // Implement Bollywood news API integration or provide a sample response
+            return 'Here are the latest Bollywood news updates.';
+        }
+
+        function getCricketScore() {
+            // Implement cricket score API integration or provide a sample response
+            return 'The current cricket score is India vs. Pakistan: 150/2.';
+        }
+
+        function addNumbers() {
+            // Sample function to add two numbers
+            var num1 = 5;
+            var num2 = 7;
+            return 'The sum of ' + num1 + ' and ' + num2 + ' is ' + (num1 + num2) + '.';
+        }
+
+        function subtractNumbers() {
+            // Sample function to subtract two numbers
+            var num1 = 10;
+            var num2 = 3;
+            return 'The difference between ' + num1 + ' and ' + num2 + ' is ' + (num1 - num2) + '.';
+        }
+
+        function multiplyNumbers() {
+            // Sample function to multiply two numbers
+            var num1 = 4;
+            var num2 = 6;
+            return 'The product of ' + num1 + ' and ' + num2 + ' is ' + (num1 * num2) + '.';
+        }
+
+        function divideNumbers() {
+            // Sample function to divide two numbers
+            var num1 = 20;
+            var num2 = 5;
+            return 'The result of dividing ' + num1 + ' by ' + num2 + ' is ' + (num1 / num2) + '.';
+        }
+
+        // Sample functions for Google Translate API (not functional in this example)
+        function translateToEnglish(text, sourceLanguage) {
+            // Implement translation logic using Google Translate API
+            // This is just a placeholder; you'll need to set up the actual API integration
+            return text;
+        }
+
+        function translateToLanguage(text, targetLanguage) {
+            // Implement translation logic using Google Translate API
+            // This is just a placeholder; you'll need to set up the actual API integration
+            return text;
+        }
+    </script>
+</body>
+</html>
