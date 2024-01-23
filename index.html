@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CzenGPT</title>
+    <title>Czen Multilingual Personal Assistant</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,6 +42,10 @@
             { keyword: ['news', 'समाचार'], action: getNews },
             { keyword: ['bollywood', 'बॉलीवुड'], action: getBollywoodNews },
             { keyword: ['cricket', 'क्रिकेट'], action: getCricketScore },
+            { keyword: ['add', 'जोड़ो'], action: addNumbers },
+            { keyword: ['subtract', 'घटाओ'], action: subtractNumbers },
+            { keyword: ['multiply', 'गुणा'], action: multiplyNumbers },
+            { keyword: ['divide', 'भाग'], action: divideNumbers },
             // Add more commands as needed
             // ...
         ];
@@ -95,17 +99,45 @@
 
         function getNews() {
             // Implement news API integration or provide a sample response
-            return 'Here are the latest news headlines. Modi inaugurates Hindu temple on site of razed mosque in India';
+            return 'Here are the latest news headlines. Modi inaugurates Hindu temple on site of razed mosque in India.';
         }
 
         function getBollywoodNews() {
             // Implement Bollywood news API integration or provide a sample response
-            return 'Here are the latest Bollywood news updates. Alia Bhatt, Ranbir Kapoor sit with Akash Ambani, wife Shloka, Katrina Kaif at Ayodhya Ram Mandir consecration ceremony';
+            return 'Here are the latest Bollywood news updates.';
         }
 
         function getCricketScore() {
             // Implement cricket score API integration or provide a sample response
-            return 'The current cricket score is India vs. Pakistan: 150/2. How does anyone, let alone Rohit's Team India, fill a Virat Kohli-sized hole in Test cricket.';
+            return 'The current cricket score is India vs. Pakistan: 150/2.';
+        }
+
+        function addNumbers() {
+            // Sample function to add two numbers
+            var num1 = 5;
+            var num2 = 7;
+            return 'The sum of ' + num1 + ' and ' + num2 + ' is ' + (num1 + num2) + '.';
+        }
+
+        function subtractNumbers() {
+            // Sample function to subtract two numbers
+            var num1 = 10;
+            var num2 = 3;
+            return 'The difference between ' + num1 + ' and ' + num2 + ' is ' + (num1 - num2) + '.';
+        }
+
+        function multiplyNumbers() {
+            // Sample function to multiply two numbers
+            var num1 = 4;
+            var num2 = 6;
+            return 'The product of ' + num1 + ' and ' + num2 + ' is ' + (num1 * num2) + '.';
+        }
+
+        function divideNumbers() {
+            // Sample function to divide two numbers
+            var num1 = 20;
+            var num2 = 5;
+            return 'The result of dividing ' + num1 + ' by ' + num2 + ' is ' + (num1 / num2) + '.';
         }
 
         // Sample functions for Google Translate API (not functional in this example)
