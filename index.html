@@ -26,74 +26,48 @@
 <body>
     <div id="chat-container"></div>
     <div id="input-container">
-        <input type="text" id="user-input" placeholder="Type your message...">
-        <button onclick="sendMessage()">Send</button>
+        <input type="text" id="user-input" placeholder="Type your command...">
+        <button onclick="sendCommand()">Send</button>
+        <select id="language-selector">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+        </select>
     </div>
 
     <script>
-        var qaData = [
-            { question: 'What is the capital of France?', answer: 'Paris' },
-            { question: 'capital of france?', answer: 'Paris' },
-            { question: 'Capital of France?', answer: 'Paris' },
-            { question: 'what is capital of france?', answer: 'Paris' },
-            { question: 'What is capital of France?', answer: 'Paris' },
-            { question: 'Who is the author of "To Kill a Mockingbird"?', answer: 'Harper Lee' },
-            { question: 'What is the largest planet in our solar system?', answer: 'Jupiter' },
-            { question: 'In which year did the Titanic sink?', answer: '1912' },
-            { question: 'What is the capital of Japan?', answer: 'Tokyo' },
-            { question: 'Who painted the Mona Lisa?', answer: 'Leonardo da Vinci' },
-            { question: 'What is the currency of Australia?', answer: 'Australian Dollar' },
-            { question: 'What is the largest mammal?', answer: 'Blue whale' },
-            { question: 'What is the square root of 64?', answer: '8' },
-            { question: 'Which element is good conductor of electricity', answer: 'Metal(like silver and copper)' },
-            { question: 'Explain the concept of artificial intelligence.', answer: 'Certainly! The concept of artificial intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence. These tasks include learning, reasoning, problem-solving, perception, and language understanding. The goal of artificial intelligence is to create machines that can mimic cognitive functions associated with human intelligence.
-
-Here are key components of the concept of artificial intelligence:
-
-1.Learning: AI systems are designed to learn from data and experiences. Machine learning, a subset of AI, involves the development of algorithms that enable computers to improve their performance on a task over time without being explicitly programmed.<br>
-
-2.Reasoning and Problem-Solving: AI systems can use logical reasoning to analyze information and make decisions. They can also solve complex problems by considering multiple factors and potential solutions.<br>
-
-3.Perception: AI systems can be equipped with sensors and data input mechanisms to perceive and interpret the world. This includes computer vision for image recognition, speech recognition, and other sensory capabilities.<br>
-
-4.Natural Language Processing (NLP): AI systems can understand and generate human language. NLP enables machines to interact with users in a way that resembles natural communication.<br>
-
-5.Automation: AI is often associated with automation, allowing machines to perform tasks that would typically require human intervention. This includes repetitive tasks, data analysis, and decision-making processes.<br>
-
-6.Adaptability: AI systems can adapt to changing environments and new information. This adaptability is crucial for handling dynamic and unpredictable scenarios.<br>
-
-There are two main types of AI:<br>
-
-(i)Narrow AI (Weak AI): This type of AI is designed to perform a specific task. Examples include virtual personal assistants, image recognition systems, and recommendation algorithms.<br>
-
-(ii)General AI (Strong AI): This hypothetical form of AI would possess the ability to understand, learn, and apply knowledge across a broad range of tasks at a level comparable to human intelligence. General AI is still a goal for the future and does not currently exist.<br>
-
-AI is a rapidly evolving field with applications in various industries, including healthcare, finance, transportation, and entertainment. It raises ethical and societal questions, and ongoing research and development continue to shape its capabilities and limitations.' },
-            { question: 'What will happen with the Y2K bug?', answer: 'Concerns arose about the potential computer glitches when transitioning from the year 1999 to 2000.' },
-            { question: 'Who won the U.S. presidential election in 2000?', answer: 'The controversial Bush vs. Gore election led to a recount in Florida, ultimately decided by the U.S. Supreme Court.' },
-            { question: 'Why did the World Trade Center towers collapse?', answer: 'Following the 9/11 terrorist attacks, there were numerous questions about the events and their impact.' },
-            { question: 'What led to the Enron scandal?', answer: 'Enron's bankruptcy and accounting fraud scandal raised questions about corporate ethics and governance.' },
-            { question: 'Why did the U.S. invade Iraq?', answer: 'The Iraq War began, prompting questions about the rationale behind the invasion and its consequences.' },
-            { question: 'What caused the Indian Ocean tsunami in 2004?', answer: 'The massive tsunami in December 2004 led to questions about its causes and the need for early warning systems.' },
-            { question: 'How did Hurricane Katrina impact New Orleans?', answer: 'After Hurricane Katrina, questions arose about the government's response and the vulnerability of coastal cities.' },
-            { question: 'What is Web 2.0?', answer: 'The term "Web 2.0" gained popularity, reflecting a shift toward user-generated content and interactive online platforms.' },
-            { question: 'What caused the global financial crisis in 2007?', answer: 'The collapse of major financial institutions triggered questions about the causes and consequences of the economic downturn.' },
-            { question: 'What caused the global financial crisis?', answer: 'The collapse of major financial institutions triggered questions about the causes and consequences of the economic downturn.' },
-            { question: 'Who won the U.S. presidential election in 2008?', answer: 'Barack Obama's historic election generated widespread interest and questions about the future direction of the country.' },
-            { question: 'What is swine flu?', answer: 'The H1N1 influenza virus (swine flu) raised questions about the global response to a potential pandemic.' },
-            { question: 'What is WikiLeaks?', answer: 'WikiLeaks gained attention for releasing classified government documents, sparking debates about transparency and security.' },
-            { question: 'What caused the Arab Spring?', answer: 'Protests and uprisings across the Arab world led to questions about the factors driving political change.' },
-            { question: 'arab spring', answer: 'Protests and uprisings across the Arab world led to questions about the factors driving political change.' },
-            { question: 'Arab Spring', answer: 'Protests and uprisings across the Arab world led to questions about the factors driving political change.' },
-            { question: 'wikileaks', answer: 'WikiLeaks gained attention for releasing classified government documents, sparking debates about transparency and security.' },
+        var commands = [
+            { keyword: ['time', 'समय'], action: getTime },
+            { keyword: ['date', 'तारीख'], action: getDate },
+            { keyword: ['weather', 'मौसम'], action: getWeather },
+            { keyword: ['news', 'समाचार'], action: getNews },
+            { keyword: ['bollywood', 'बॉलीवुड'], action: getBollywoodNews },
+            { keyword: ['cricket', 'क्रिकेट'], action: getCricketScore },
+            // Add more commands as needed
             // ...
         ];
 
-        function sendMessage() {
-            var userInput = document.getElementById('user-input').value;
-            displayMessage('User', userInput);
-            var botResponse = getBotResponse(userInput);
-            displayMessage('Czen', botResponse);
+        function sendCommand() {
+            var userCommand = document.getElementById('user-input').value.toLowerCase();
+            var selectedLanguage = document.getElementById('language-selector').value;
+
+            // Translate user input to English using Google Translate API (sample)
+            var translatedCommand = translateToEnglish(userCommand, selectedLanguage);
+
+            displayMessage('User', userCommand);
+
+            for (var i = 0; i < commands.length; i++) {
+                var keywords = commands[i].keyword;
+                if (keywords.includes(translatedCommand)) {
+                    var response = commands[i].action();
+                    // Translate the response back to the selected language before displaying
+                    var translatedResponse = translateToLanguage(response, selectedLanguage);
+                    displayMessage('Czen', translatedResponse);
+                    return;
+                }
+            }
+
+            // If no matching command is found
+            displayMessage('Czen', "I'm not sure how to handle that command.");
         }
 
         function displayMessage(sender, message) {
@@ -104,16 +78,47 @@ AI is a rapidly evolving field with applications in various industries, includin
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        function getBotResponse(userInput) {
-            // Check if the user input matches any of the predefined questions
-            for (var i = 0; i < qaData.length; i++) {
-                var question = qaData[i].question.toLowerCase();
-                if (userInput.toLowerCase().includes(question)) {
-                    return qaData[i].answer;
-                }
-            }
-            // If no match found, provide a default response
-            return "I'm not sure how to answer that.";
+        function getTime() {
+            var now = new Date();
+            return 'The current time is ' + now.toLocaleTimeString();
+        }
+
+        function getDate() {
+            var now = new Date();
+            return 'Today is ' + now.toDateString();
+        }
+
+        function getWeather() {
+            // Implement weather API integration or provide a sample response
+            return 'The weather is sunny.';
+        }
+
+        function getNews() {
+            // Implement news API integration or provide a sample response
+            return 'Here are the latest news headlines. Modi inaugurates Hindu temple on site of razed mosque in India';
+        }
+
+        function getBollywoodNews() {
+            // Implement Bollywood news API integration or provide a sample response
+            return 'Here are the latest Bollywood news updates. Alia Bhatt, Ranbir Kapoor sit with Akash Ambani, wife Shloka, Katrina Kaif at Ayodhya Ram Mandir consecration ceremony';
+        }
+
+        function getCricketScore() {
+            // Implement cricket score API integration or provide a sample response
+            return 'The current cricket score is India vs. Pakistan: 150/2. How does anyone, let alone Rohit's Team India, fill a Virat Kohli-sized hole in Test cricket.';
+        }
+
+        // Sample functions for Google Translate API (not functional in this example)
+        function translateToEnglish(text, sourceLanguage) {
+            // Implement translation logic using Google Translate API
+            // This is just a placeholder; you'll need to set up the actual API integration
+            return text;
+        }
+
+        function translateToLanguage(text, targetLanguage) {
+            // Implement translation logic using Google Translate API
+            // This is just a placeholder; you'll need to set up the actual API integration
+            return text;
         }
     </script>
 </body>
