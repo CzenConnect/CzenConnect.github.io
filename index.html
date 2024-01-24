@@ -65,7 +65,7 @@
             <input type="checkbox" id="not-a-robot" required> I'm not a robot
         </label>
 
-        <button type="button" id="loginButton" onclick="redirectToConectPage()" disabled>Login to CzenGPT</button>
+        <button type="button" id="loginButton" onclick="redirectToConnectPage()" disabled>Login to CzenGPT</button>
     </form>
 
     <script>
@@ -89,21 +89,15 @@
 
             // Adjust opacity based on form validity
             loginButton.style.opacity = (isFormValid && isSecurityAnswerCorrect && isCheckboxChecked) ? 1 : 0.5;
-
-            console.log("Form Valid:", isFormValid);
-            console.log("Security Answer Correct:", isSecurityAnswerCorrect);
-            console.log("Checkbox Checked:", isCheckboxChecked);
         }
 
         function redirectToConnectPage() {
             const userSecurityAnswer = document.getElementById('security-question').value.trim().toLowerCase();
 
-            console.log("Redirecting..."); // Add this line for debugging
-
             // Check if the security answer is correct and the button is not disabled
             if (userSecurityAnswer === correctSecurityAnswer.toLowerCase() && !loginButton.disabled) {
                 // You can perform additional validation here before redirecting
-                window.location.href = "connect.html";
+                window.location.href = "conect.html";  // Corrected the destination URL
             } else {
                 // Display an error message or handle the case where the security answer is incorrect
                 alert("Incorrect security answer. Please try again.");
