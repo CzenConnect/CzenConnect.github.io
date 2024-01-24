@@ -5,13 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CzenGPT Chatbot</title>
     <style>
-        /* Your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background-color: #f1f1f1;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: #c1e0ff;
+        }
+
+        .input-box {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #sendMessage {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #sendMessage:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <div class="chat-container">
         <div class="chat-box" id="chatBox">
-            <div class="bot-message">Welcome to CzenGPT! How can I help you today?</div>
+            <div class="bot-message message">Welcome to CzenGPT! How can I help you today?</div>
+            <div class="bot-message message">You can ask me about various topics like technology, news, or general information.</div>
         </div>
         <div class="input-box">
             <input type="text" id="userInput" placeholder="Type your message...">
@@ -20,60 +88,63 @@
     </div>
 
     <script>
-        async function sendMessage() {
-            var userInput = document.getElementById('userInput').value;
-            if (userInput.trim() === '') {
+        const chatBox = document.getElementById('chatBox');
+        const userInputElement = document.getElementById('userInput');
+
+        function addUserMessage(message) {
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message message';
+            userMessage.textContent = message;
+            chatBox.appendChild(userMessage);
+        }
+
+        function addBotMessage(message) {
+            const botMessage = document.createElement('div');
+            botMessage.className = 'bot-message message';
+            botMessage.textContent = message;
+            chatBox.appendChild(botMessage);
+        }
+
+        function sendMessage() {
+            const userInput = userInputElement.value.trim();
+            if (userInput === '') {
                 return;
             }
 
-            var chatBox = document.getElementById('chatBox');
-            
-            // Display user message
-            var userMessage = document.createElement('div');
-            userMessage.className = 'user-message';
-            userMessage.textContent = userInput;
-            chatBox.appendChild(userMessage);
+            addUserMessage(userInput);
+            handleUserInput(userInput);
+            userInputElement.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
-            // Send user input to Dialogflow for processing
-            var botResponse = await getDialogflowResponse(userInput);
+        function handleUserInput(userInput) {
+            const lowerCaseInput = userInput.toLowerCase();
 
-            // Display bot response
-            var botMessage = document.createElement('div');
-            botMessage.className = 'bot-message';
-            botMessage.textContent = botResponse;
-            chatBox.appendChild(botMessage);
+            // Handle user input based on conversation flow
+            if (lowerCaseInput.includes('how are you')) {
+                addBotMessage('I am just a chatbot, but thanks for asking!');
+            } else if (lowerCaseInput.includes('hello') || lowerCaseInput.includes('hi')) {
+                addBotMessage('Hi there! How can I assist you?');
+            } else if (lowerCaseInput.includes('technology')) {
+                addBotMessage('Sure, I can provide information on various technology topics. What specific area are you interested in?');
+            } else if (lowerCaseInput.includes('news')) {
+                addBotMessage('I can keep you updated with the latest news. What category of news are you interested in? (e.g., tech, sports, politics)');
+            } else {
+                // If no specific match, send to Dialogflow
+                sendToDialogflow(userInput);
+            }
+        }
 
-            // Clear user input
-            document.getElementById('userInput').value = '';
-
-            // Scroll to the bottom of the chat box
+        async function sendToDialogflow(userInput) {
+            // Your Dialogflow API integration code goes here
+            const botResponse = await getDialogflowResponse(userInput);
+            addBotMessage(botResponse);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         async function getDialogflowResponse(userInput) {
-            var dialogflowApiKey = 'YOUR_DIALOGFLOW_API_KEY';
-            var dialogflowProjectId = 'YOUR_DIALOGFLOW_PROJECT_ID';
-
-            var apiUrl = `https://dialogflow.googleapis.com/v2/projects/${dialogflowProjectId}/agent/sessions/123456789:detectIntent`;
-
-            var response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${dialogflowApiKey}`
-                },
-                body: JSON.stringify({
-                    queryInput: {
-                        text: {
-                            text: userInput,
-                            languageCode: 'en-US'
-                        }
-                    }
-                })
-            });
-
-            var result = await response.json();
-            return result.queryResult.fulfillmentText;
+            // Your existing Dialogflow integration code goes here
+            return 'Dialogflow response: ...';
         }
     </script>
 </body>
