@@ -1,202 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CzenGPT Chat</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-
-    #chat-container {
-      width: 300px;
-      margin: 20px auto;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    #chat-messages {
-      padding: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    #user-input {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      outline: none;
-      border-top: 1px solid #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CzenGPT Chatbot</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
 </head>
 <body>
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox">
+            <div class="bot-message">Welcome to CzenGPT! How can I help you today?</div>
+        </div>
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <button id="sendMessage" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
 
-  <h1>CzenGPT</h1>
+    <script>
+        async function sendMessage() {
+            var userInput = document.getElementById('userInput').value;
+            if (userInput.trim() === '') {
+                return;
+            }
 
-  <div id="chat-container">
-    <div id="chat-messages"></div>
-    <input type="text" id="user-input" placeholder="Type your message...">
-  </div>
+            var chatBox = document.getElementById('chatBox');
+            
+            // Display user message
+            var userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.textContent = userInput;
+            chatBox.appendChild(userMessage);
 
-  <script>
-    const predefinedQuestions = [
-      { question: "What is the capital of Brazil?", answer: "Brasília" },
-      { question: "Which country is known as the 'Land of the Rising Sun'?", answer: "Japan" },
-      { question: "What is the population of China?", answer: "Over 1.4 billion" },
-      { question: "Which city is famous for the Eiffel Tower?", answer: "Paris" },
-      { question: "What is the official language of Canada?", answer: "English and French" },
-      { question: "In which country is the Great Barrier Reef located?", answer: "Australia" },
-      { question: "What is the capital of India?", answer: "New Delhi" },
-      { question: "Which city is known as the 'Big Apple'?", answer: "New York City" },
-      { question: "What is the currency of South Africa?", answer: "South African Rand" },
-      { question: "In which country is the Acropolis located?", answer: "Greece" },
-      { question: "Which city is famous for its cherry blossoms and the Imperial Palace?", answer: "Tokyo" },
-      { question: "What is the official language of China?", answer: "Mandarin" },
-      { question: "In which country is the Iguazu Falls located?", answer: "Argentina and Brazil" },
-      { question: "Which city is known as the 'City of Brotherly Love'?", answer: "Philadelphia" },
-      { question: "What is the currency of South Korea?", answer: "South Korean Won" },
-      { question: "In which country is the Sahara Desert located?", answer: "Multiple countries in North Africa" },
-      { question: "Which city is famous for its medieval architecture and canals?", answer: "Bruges" },
-      { question: "What is the capital of Turkey?", answer: "Ankara" },
-      { question: "In which country is the Caribbean Sea located?", answer: "Multiple countries in the Caribbean region" },
-      { question: "Which city is known as the 'City of Music'?", answer: "Vienna" },
-      { question: "What is the official language of Germany?", answer: "German" },
-      { question: "In which country is the Sahara Desert located?", answer: "Multiple countries in North Africa" },
-      { question: "Which city is famous for its historical architecture and the Charles Bridge?", answer: "Prague" },
-      { question: "What is the currency of Mexico?", answer: "Mexican Peso" },
-      { question: "In which country is the Amazon Rainforest located?", answer: "Brazil" },
-      { question: "Which city is known as the 'City of Arts and Sciences'?", answer: "Valencia" },
-      { question: "What is the capital of Argentina?", answer: "Buenos Aires" },
-      { question: "In which country is the Serengeti National Park located?", answer: "Tanzania" },
-      { question: "Which city is famous for its ancient history and the Pyramids of Giza?", answer: "Cairo" },
-      { question: "What is the official language of Japan?", answer: "Japanese" },
-      { question: "In which country is the Amazon Rainforest located?", answer: "Brazil" },
-      { question: "Which city is known as the 'City of Bridges'?", answer: "Pittsburgh" },
-      { question: "What is the currency of South Africa?", answer: "South African Rand" },
-      { question: "In which country is the Great Barrier Reef located?", answer: "Australia" },
-      { question: "Which city is famous for its modern skyscrapers and the Marina Bay Sands?", answer: "Singapore" },
-      { question: "What is the capital of India?", answer: "New Delhi" },
-      { question: "In which country is the Matterhorn mountain located?", answer: "Switzerland" },
-      { question: "Which city is known as the 'City of a Hundred Spires'?", answer: "Prague" },
-      { question: "What is the largest country in the world by land area?", answer: "Russia" },
-      { question: "Seoul", answer: "capital of South Korea" },
-      { question: "Paris", answer: "capital of France" },
-      { question: "Rio", answer: "city in Brazil known for Carnival" },
-      { question: "Pyramids", answer: "ancient structures in Egypt" },
-      { question: "Mona Lisa", answer: "famous painting by Leonardo da Vinci" },
-      { question: "Amazon", answer: "river in South America" },
-      { question: "Kangaroo", answer: "marsupial native to Australia" },
-      { question: "Sushi", answer: "Japanese dish with vinegared rice and ingredients" },
-      { question: "Soccer", answer: "popular sport played worldwide" },
-      { question: "Bollywood", answer: "Indian film industry" },
-      { question: "Pizza", answer: "Italian dish with dough and toppings" },
-      { question: "Eiffel", answer: "iconic tower in Paris" },
-      { question: "Giza", answer: "location of the Great Pyramids" },
-      { question: "Panda", answer: "black and white bear native to China" },
-      { question: "Colosseum", answer: "ancient amphitheater in Rome" },
-      { question: "Tokyo", answer: "capital of Japan" },
-      { question: "Hollywood", answer: "district in Los Angeles known for the entertainment industry" },
-      { question: "Kilimanjaro", answer: "highest mountain in Africa" },
-      { question: "Sphinx", answer: "mythical creature with a lion's body and a human head" },
-      // ... more one-word questions and answers
-      { question: "U.S.", answer: "country in North America and most powerful country" },
-      { question: "Cheetah", answer: "fastest land animal" },
-      { question: "Mars", answer: "fourth planet from the sun" },
-      { question: "Einstein", answer: "famous physicist known for the theory of relativity" },
-      { question: "Gandhi", answer: "leader of Indian independence movement" },
-      { question: "Opera", answer: "musical drama performed with orchestral accompaniment" },
-      { question: "Galaxy", answer: "vast system of stars, gas, and dust" },
-      { question: "Monet", answer: "impressionist painter" },
-      { question: "Jazz", answer: "musical genre with improvisation" },
-      { question: "DNA", answer: "genetic material" },
-      { question: "Sahara", answer: "largest hot desert in the world" },
-      { question: "Tesla", answer: "electric car company and technology company" },
-      { question: "Python", answer: "high-level programming language" },
-      { question: "Venus", answer: "second planet from the sun" },
-      { question: "Nile", answer: "longest river in Africa" },
-      { question: "Dinosaur", answer: "extinct reptile from prehistoric times" },
-      { question: "Leonardo", answer: "Italian polymath of the Renaissance" },
-      { question: "Pluto", answer: "dwarf planet in our solar system" },
-      { question: "Guitar", answer: "musical instrument with strings" },
-      { question: "Antarctica", answer: "southernmost continent on Earth" },
-      { question: "Eagle", answer: "bird of prey known for its keen eyesight" },
-      { question: "Hello", answer: "hi" },
-      { question: "Bye", answer: "bye" },
-      { question: "Namaste", answer: "namaste" },
-      // ... more one-word questions and answers
-    ];
+            // Send user input to Dialogflow for processing
+            var botResponse = await getDialogflowResponse(userInput);
 
-    function getRandomQuestion() {
-      const randomIndex = Math.floor(Math.random() * predefinedQuestions.length);
-      return predefinedQuestions[randomIndex];
-    }
+            // Display bot response
+            var botMessage = document.createElement('div');
+            botMessage.className = 'bot-message';
+            botMessage.textContent = botResponse;
+            chatBox.appendChild(botMessage);
 
-    function simulateUnderstanding(userInput) {
-      const mathExpressionRegex = /^(\d+(\.\d+)?([+\-*/]\d+(\.\d+)?)+)$/;
+            // Clear user input
+            document.getElementById('userInput').value = '';
 
-      if (mathExpressionRegex.test(userInput)) {
-        try {
-          const result = eval(userInput);
-          return `CzenGPT: ${userInput} = ${result}`;
-        } catch (error) {
-          return "CzenGPT: Oops! There was an error evaluating the expression.";
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
-      }
 
-      const foundQuestion = predefinedQuestions.find(question => question.question.toLowerCase() === userInput.toLowerCase());
-      if (foundQuestion) {
-        return `CzenGPT: ${foundQuestion.answer}`;
-      } else {
-        return "CzenGPT: I'm sorry, I didn't understand that.";
-      }
-    }
+        async function getDialogflowResponse(userInput) {
+            var dialogflowApiKey = 'YOUR_DIALOGFLOW_API_KEY';
+            var dialogflowProjectId = 'YOUR_DIALOGFLOW_PROJECT_ID';
 
-    function handleUserInput() {
-      const userInput = document.getElementById('user-input').value;
-      if (userInput.trim() === '') return;
+            var apiUrl = `https://dialogflow.googleapis.com/v2/projects/${dialogflowProjectId}/agent/sessions/123456789:detectIntent`;
 
-      const chatMessages = document.getElementById('chat-messages');
-      const userMessage = document.createElement('div');
-      userMessage.className = 'user-message';
-      userMessage.textContent = `You: ${userInput}`;
-      chatMessages.appendChild(userMessage);
+            var response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${dialogflowApiKey}`
+                },
+                body: JSON.stringify({
+                    queryInput: {
+                        text: {
+                            text: userInput,
+                            languageCode: 'en-US'
+                        }
+                    }
+                })
+            });
 
-      // Simulate understanding and generate a response
-      const czenGPTResponse = simulateUnderstanding(userInput);
-      
-      const botMessage = document.createElement('div');
-      botMessage.className = 'bot-message';
-      botMessage.textContent = czenGPTResponse;
-      chatMessages.appendChild(botMessage);
-
-      // If the user's input matches a predefined question, generate a random question
-      if (predefinedQuestions.some(question => question.question.toLowerCase() === userInput.toLowerCase())) {
-        const randomQuestion = getRandomQuestion();
-        const botMessageRandomQuestion = document.createElement('div');
-        botMessageRandomQuestion.className = 'bot-message';
-        botMessageRandomQuestion.textContent = `CzenGPT: ${randomQuestion.question}`;
-        chatMessages.appendChild(botMessageRandomQuestion);
-      }
-
-      // Clear user input
-      document.getElementById('user-input').value = '';
-
-      // Scroll to the bottom of the chat container
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    document.getElementById('user-input').addEventListener('keyup', function(event) {
-      if (event.key === 'Enter') {
-        handleUserInput();
-      }
-    });
-  </script>
-
+            var result = await response.json();
+            return result.queryResult.fulfillmentText;
+        }
+    </script>
 </body>
 </html>
