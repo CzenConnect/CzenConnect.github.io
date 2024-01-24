@@ -61,11 +61,11 @@
         <label for="math-challenge">Math Challenge: Solve 5 + 7 = ?</label>
         <input type="number" id="math-challenge" name="math-challenge" required>
 
-        <label style="text-align:center;">
-<input type="checkbox" id="not-a-robot" required> I'm not a robot
+        <label for="not-a-robot">
+            <input type="checkbox" id="not-a-robot" required> I'm not a robot
         </label>
 
-        <button type="submit" id="loginButton" disabled><a href="conect.html">Login to CzenGPT</a></button>
+        <button type="button" id="loginButton" onclick="redirectToConnectPage()" disabled>Login to CzenGPT</button>
     </form>
 
     <script>
@@ -84,7 +84,7 @@
             const isFormValid = Array.from(requiredInputs).every(input => input.value.trim() !== '');
             const isSecurityAnswerCorrect = document.getElementById('security-question').value.trim().toLowerCase() === correctSecurityAnswer.toLowerCase();
             const isCheckboxChecked = document.getElementById('not-a-robot').checked;
-            
+
             loginButton.disabled = !(isFormValid && isSecurityAnswerCorrect && isCheckboxChecked);
 
             // Adjust opacity based on form validity
@@ -92,8 +92,17 @@
         }
 
         function redirectToConnectPage() {
-            // You can perform additional validation here before redirecting
-            window.location.href = "conect.html";
+            const userSecurityAnswer = document.getElementById('security-question').value.trim().toLowerCase();
+
+            // Check if the security answer is correct and the button is not disabled
+            if (userSecurityAnswer === correctSecurityAnswer.toLowerCase() && !loginButton.disabled) {
+                // You can perform additional validation here before redirecting
+                window.location.href = "connect.html";
+            } else {
+                // Display an error message or handle the case where the security answer is incorrect
+                alert("Incorrect security answer. Please try again.");
+            }
+
             return false; // Prevents the form from submitting
         }
     </script>
