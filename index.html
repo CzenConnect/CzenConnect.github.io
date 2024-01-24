@@ -38,9 +38,6 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            /* Initially disable the button */
-            pointer-events: none;
-            opacity: 0.5;
         }
     </style>
 </head>
@@ -65,44 +62,14 @@
             <input type="checkbox" id="not-a-robot" required> I'm not a robot
         </label>
 
-        <button type="button" id="loginButton" onclick="redirectconectpage()" disabled><a href="conect.html">Login to CzenGPT</a></button>
+        <button type="submit">Login to CzenGPT</button>
     </form>
 
     <script>
-        // Define the correct answer to the security question
-        const correctSecurityAnswer = "God";
-
-        // Enable the button only if all required fields are filled, and security answer is correct, and the checkbox is checked
-        const loginButton = document.getElementById('loginButton');
-        const requiredInputs = document.querySelectorAll('input[required]');
-
-        requiredInputs.forEach(input => {
-            input.addEventListener('input', checkFormValidity);
-        });
-
-        function checkFormValidity() {
-            const isFormValid = Array.from(requiredInputs).every(input => input.value.trim() !== '');
-            const isSecurityAnswerCorrect = document.getElementById('security-question').value.trim().toLowerCase() === correctSecurityAnswer.toLowerCase();
-            const isCheckboxChecked = document.getElementById('not-a-robot').checked;
-
-            loginButton.disabled = !(isFormValid && isSecurityAnswerCorrect && isCheckboxChecked);
-
-            // Adjust opacity based on form validity
-            loginButton.style.opacity = (isFormValid && isSecurityAnswerCorrect && isCheckboxChecked) ? 1 : 0.5;
-        }
-
         function redirectToConnectPage() {
-            const userSecurityAnswer = document.getElementById('security-question').value.trim().toLowerCase();
-
-            // Check if the security answer is correct and the button is not disabled
-            if (userSecurityAnswer === correctSecurityAnswer.toLowerCase() && !loginButton.disabled) {
-                // You can perform additional validation here before redirecting
-                window.location.href = "conect.html";  // Updated the destination URL
-            } else {
-                // Display an error message or handle the case where the security answer is incorrect
-                alert("Incorrect security answer. Please try again.");
-            }
-
+            // You can perform additional validation here before redirecting
+            alert("Login successful! Redirecting to conect.html");
+            window.location.href = "conect.html";  // Updated the destination URL
             return false; // Prevents the form from submitting
         }
     </script>
